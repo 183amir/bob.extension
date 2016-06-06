@@ -227,7 +227,13 @@ def main(command_line_options = None):
     # open a pull request on conda-forge
     package = os.path.basename(os.getcwd())
     url = 'https://pypi.io/packages/source/{0}/{1}/{1}-{2}.zip'.format(package[0], package, args.stable_version)
-    md5 = get_remote_md5_sum(url)
+    try:
+      md5 = get_remote_md5_sum(url)
+    except Exception:
+      if not args.dry_run:
+        raise
+      else:
+        md5 = 'dryrunmd5'
     temp_dir = tempfile.mkdtemp()
     try:
       print("\nClonning the feedstock")
